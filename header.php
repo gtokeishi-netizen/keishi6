@@ -1076,10 +1076,16 @@
                         } else {
                             // フォールバック: 関数が利用できない場合の統計表示
                             $post_count = wp_count_posts('grant');
-                            if ($post_count && $post_count->publish > 0) {
+                            $publish_count = 0;
+                            
+                            if ($post_count && is_object($post_count)) {
+                                $publish_count = isset($post_count->publish) ? (int)$post_count->publish : 0;
+                            }
+                            
+                            if ($publish_count > 0) {
                                 echo '<div class="gi-stat-item">';
                                 echo '<div class="gi-stat-icon"></div>';
-                                echo '<span class="gi-stat-number">' . number_format($post_count->publish) . '</span>';
+                                echo '<span class="gi-stat-number">' . number_format($publish_count) . '</span>';
                                 echo '<span>件</span>';
                                 echo '</div>';
                             }

@@ -319,7 +319,8 @@ function gi_sample_data_page_content() {
     }
     
     // 現在の投稿数を確認
-    $grant_count = wp_count_posts('grant')->publish;
+    $post_count = wp_count_posts('grant');
+    $grant_count = ($post_count && is_object($post_count) && isset($post_count->publish)) ? (int)$post_count->publish : 0;
     ?>
     <div class="wrap">
         <h1>サンプルデータ作成</h1>
