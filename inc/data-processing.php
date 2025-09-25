@@ -575,7 +575,17 @@ function gi_get_grant_statistics() {
  * 統計情報取得（キャッシュ対応）- エイリアス関数
  */
 function gi_get_cached_stats() {
-    return gi_get_grant_statistics();
+    if (function_exists('gi_get_grant_statistics')) {
+        return gi_get_grant_statistics();
+    }
+    
+    // フォールバック: 基本的な統計を返す
+    $post_count = wp_count_posts('grant');
+    return array(
+        'total_grants' => $post_count ? $post_count->publish : 0,
+        'active_grants' => $post_count ? $post_count->publish : 0,
+        'recent_grants' => 0,
+    );
 }
 
 /**

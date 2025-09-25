@@ -1056,22 +1056,34 @@
                 <!-- Stats Display -->
                 <div class="gi-stats">
                     <?php
-                    $stats = gi_get_cached_stats();
-                    if ($stats && !empty($stats['total_grants'])) {
-                        echo '<div class="gi-stat-item">';
-                        echo '<div class="gi-stat-icon"></div>';
-                        echo '<span class="gi-stat-number">' . number_format($stats['total_grants']) . '</span>';
-                        echo '<span>件</span>';
-                        echo '</div>';
-                        
-                        if (!empty($stats['active_grants'])) {
-                            echo '<div class="gi-stat-item">';
-                            echo '<div class="gi-stat-icon" style="background: var(--color-success); box-shadow: 0 0 6px var(--color-success);"></div>';
-                            echo '<span class="gi-stat-number">' . number_format($stats['active_grants']) . '</span>';
-                            echo '<span>募集中</span>';
-                            echo '</div>';
+                    if (function_exists('gi_get_cached_stats')) {
+                        $stats = gi_get_cached_stats();
+                            if ($stats && !empty($stats['total_grants'])) {
+                                echo '<div class="gi-stat-item">';
+                                echo '<div class="gi-stat-icon"></div>';
+                                echo '<span class="gi-stat-number">' . number_format($stats['total_grants']) . '</span>';
+                                echo '<span>件</span>';
+                                echo '</div>';
+                                
+                                if (!empty($stats['active_grants'])) {
+                                    echo '<div class="gi-stat-item">';
+                                    echo '<div class="gi-stat-icon" style="background: var(--color-success); box-shadow: 0 0 6px var(--color-success);"></div>';
+                                    echo '<span class="gi-stat-number">' . number_format($stats['active_grants']) . '</span>';
+                                    echo '<span>募集中</span>';
+                                    echo '</div>';
+                                }
+                            }
+                        } else {
+                            // フォールバック: 関数が利用できない場合の統計表示
+                            $post_count = wp_count_posts('grant');
+                            if ($post_count && $post_count->publish > 0) {
+                                echo '<div class="gi-stat-item">';
+                                echo '<div class="gi-stat-icon"></div>';
+                                echo '<span class="gi-stat-number">' . number_format($post_count->publish) . '</span>';
+                                echo '<span>件</span>';
+                                echo '</div>';
+                            }
                         }
-                    }
                     ?>
                 </div>
                 
