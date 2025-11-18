@@ -26,11 +26,13 @@ $required_functions = [
     'gi_get_grant_amount_display'
 ];
 
-// URLパラメータから検索条件を取得（両方のパラメータ名に対応）
+// URLパラメータから検索条件を取得（単数・複数両形式に対応）
 $search_params = [
     'search' => sanitize_text_field($_GET['s'] ?? ''),
-    'category' => sanitize_text_field($_GET['category'] ?? $_GET['grant_category'] ?? ''),
-    'prefecture' => sanitize_text_field($_GET['prefecture'] ?? $_GET['grant_prefecture'] ?? ''),
+    // カテゴリー: 単数形(dropdown)と複数形(checkbox)両対応
+    'category' => gi_process_taxonomy_param($_GET['category'] ?? $_GET['categories'] ?? ''),
+    // 都道府県: 単数形(dropdown)と複数形(checkbox)両対応  
+    'prefecture' => gi_process_taxonomy_param($_GET['prefecture'] ?? $_GET['prefectures'] ?? ''),
     'amount' => sanitize_text_field($_GET['amount'] ?? ''),
     'status' => sanitize_text_field($_GET['status'] ?? ''),
     'difficulty' => sanitize_text_field($_GET['difficulty'] ?? ''),
@@ -41,6 +43,23 @@ $search_params = [
     'view' => sanitize_text_field($_GET['view'] ?? 'grid'),
     'page' => max(1, intval($_GET['paged'] ?? 1))
 ];
+
+// タクソノミーパラメータ処理用ヘルパー関数
+if (!function_exists('gi_process_taxonomy_param')) {
+    function gi_process_taxonomy_param($param) {
+        if (empty($param)) {
+            return '';
+        }
+        
+        // 配列の場合（複数選択）
+        if (is_array($param)) {
+            return implode(',', array_map('sanitize_text_field', $param));
+        }
+        
+        // 文字列の場合（単一選択）
+        return sanitize_text_field($param);
+    }
+}
 
 // 統計データ取得
 $stats = function_exists('gi_get_cached_stats') ? gi_get_cached_stats() : [

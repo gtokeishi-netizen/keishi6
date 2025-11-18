@@ -88,16 +88,7 @@ function gi_enqueue_scripts() {
     // メインJavaScript
     wp_enqueue_script('gi-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), GI_THEME_VERSION, true);
     
-    // Enhanced AI Generator (管理画面でのみ)
-    if (is_admin()) {
-        wp_enqueue_script('gi-enhanced-ai', get_template_directory_uri() . '/assets/js/enhanced-ai-generator.js', array('jquery'), GI_THEME_VERSION, true);
-        
-        // AI用の追加AJAX設定
-        wp_localize_script('gi-enhanced-ai', 'gi_ajax', array(
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('gi_ai_nonce')
-        ));
-    }
+
     
     // AJAX設定
     wp_localize_script('gi-main', 'gi_ajax', array(

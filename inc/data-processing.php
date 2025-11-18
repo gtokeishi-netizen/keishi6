@@ -541,8 +541,11 @@ function gi_get_grant_statistics() {
     if (false === $stats) {
         global $wpdb;
         
+        $post_count = wp_count_posts('grant');
+        $publish_count = ($post_count && is_object($post_count) && isset($post_count->publish)) ? (int)$post_count->publish : 0;
+        
         $stats = [
-            'total_grants' => wp_count_posts('grant')->publish,
+            'total_grants' => $publish_count,
             'active_grants' => gi_get_grants_count_by_status('active'),
             'categories_count' => wp_count_terms('grant_category'),
             'prefectures_count' => wp_count_terms('grant_prefecture')
@@ -575,7 +578,23 @@ function gi_get_grant_statistics() {
  * 統計情報取得（キャッシュ対応）- エイリアス関数
  */
 function gi_get_cached_stats() {
-    return gi_get_grant_statistics();
+    if (function_exists('gi_get_grant_statistics')) {
+        return gi_get_grant_statistics();
+    }
+    
+    // フォールバック: 基本的な統計を返す
+    $post_count = wp_count_posts('grant');
+    $publish_count = 0;
+    
+    if ($post_count && is_object($post_count) && isset($post_count->publish)) {
+        $publish_count = (int)$post_count->publish;
+    }
+    
+    return array(
+        'total_grants' => $publish_count,
+        'active_grants' => $publish_count,
+        'recent_grants' => 0,
+    );
 }
 
 /**
@@ -812,7 +831,8 @@ function gi_check_grant_prefecture_assignments() {
         AND tt.term_taxonomy_id IS NULL
     ");
     
-    $total_grants = wp_count_posts('grant')->publish;
+    $post_count = wp_count_posts('grant');
+    $total_grants = ($post_count && is_object($post_count) && isset($post_count->publish)) ? (int)$post_count->publish : 0;
     
     return array(
         'total_grants' => intval($total_grants),

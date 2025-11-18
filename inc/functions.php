@@ -2,13 +2,13 @@
 /**
  * Grant Insight Perfect - Functions File Loader (Cleanup Edition)
  * 
- * ファイル整理により不要ファイルを削除、8個に整理
- * - 重複ファイル削除（ajax-functions系の3ファイル → 1ファイル）
- * - ファイル名をわかりやすくリネーム
- * - 機能別にファイルを整理・最適化
+ * ファイル整理により不要ファイルを削除、7個に整理
+ * - 不要なAI生成機能とExcelインポート/エクスポート機能を削除
+ * - Jグランツ・Google Sheets連携機能を削除
+ * - コードベースの簡素化とメンテナンス性向上
  * 
  * @package Grant_Insight_Perfect
- * @version 8.1.0
+ * @version 8.2.0
  */
 
 // セキュリティチェック
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 
 // テーマバージョン定数（ファイル整理版）
 if (!defined('GI_THEME_VERSION')) {
-    define('GI_THEME_VERSION', '8.1.0');
+    define('GI_THEME_VERSION', '8.2.0');
 }
 if (!defined('GI_THEME_PREFIX')) {
     define('GI_THEME_PREFIX', 'gi_');
@@ -27,19 +27,16 @@ if (!defined('GI_THEME_PREFIX')) {
 // 機能ファイルの読み込み
 $inc_dir = get_template_directory() . '/inc/';
 
-// 整理されたファイル構成（10ファイル → 11ファイル、Google Sheets Integration追加）
+// 整理されたファイル構成（不要ファイル削除後の8ファイル）
 $required_files = array(
     'theme-foundation.php',     // テーマ設定、投稿タイプ、タクソノミー統合（旧：core-setup.php）
     'card-rendering.php',       // カードレンダリング、テンプレート、モバイル最適化統合（旧：display-functions.php）
     'data-processing.php',      // ヘルパー関数、パフォーマンス最適化統合（旧：data-functions.php）
     'search-integration.php',   // AI機能・検索履歴統合（旧：ai-functions.php）
-    'enhanced-ai-generator.php', // 高度なAI生成機能（新規追加）
     'ajax-handlers.php',        // AJAX処理（旧：3-ajax-functions.php）
     'admin-customization.php',  // 管理画面機能（旧：6-admin-functions.php）
     'fields-configuration.php', // ACF設定とフィールド定義統合（旧：acf-setup.php）
-    'external-importer.php',    // Jグランツ・インポーター機能（旧：grant-insight-jgrants-importer.php）
-    'excel-import-export.php',  // Excel インポート・エクスポート機能（新規追加）
-    'google-sheets-integration.php' // Google Sheets連携機能（新規追加）
+    'gas-sync-endpoints.php',   // Google Apps Script 連携API（新規追加）
 );
 
 // 各ファイルを安全に読み込み
